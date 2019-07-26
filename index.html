@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+	function reverse(inp) {
+		return inp.split("").reverse().join("");
+	}
+	function complement(inp) {
+		ret = ""
+		inp.split("").forEach(function(c){
+			switch(c) {
+				case 'A':
+					ret = ret + 'T';
+					break;
+				case 'T':
+					ret = ret + 'A';
+					break;
+				case 'C':
+					ret = ret + 'G';
+					break;
+				case 'G':
+					ret = ret + 'C';
+					break;
+				case 'N':
+					ret = ret + 'N';
+					break;
+				default:
+					alert("Invalid DNA sequence...");
+			}
+		});
+		return ret;
+	}
+	function reverseComplement(inp) {
+		return complement(reverse(inp));
+	}
+	$(document).ready(function(){
+		flybase_iframe = $("#flybase_iframe");
+		$("#flybase_reset_button").click(function(){
+			flybase_iframe.attr("src", "https://flybase.org/blast/");
+		});
+
+		$("#flybase_save_button").click(function(){
+			var newButton = $("<button>" + $("#save_name_input").val() + "</button>");
+			newButton.val("http://flybase.org/blast/checkJobStatus.html?jobHash=" + $("#job_id_input").val());
+			newButton.click(function(){
+				$("#flybase_iframe").attr("src", $(this).val());
+			});
+			$(".flybase-blast-div").append(newButton);
+		});
+
+		isForward = 0;
+		chrom = "";
+		queryNt = -1;
+		subjectNt = -1;
+		firstRowMatch = "";
+		matchInfo = [$("#plus"), $("#minus"), $("#chrom"), $("#queryNt"), $("#subjectNt"), $("#firstRowMatch")];
+
+		endSeq = 0;
+		pElemEndArr = [$("#5primeSeq"), $("#3primeSeq")];
+
+		ilAnswerArr = [$("#insertionLocation"), $("#pOrientation"), $("#duplNt"), $("#nearNt")];
+
+		$("#il_reset").click(function(){
+			ilAnswerArr.forEach(function(b){
+				b.val("");
+			});
+		});
+		$("#il_submit").click(function(){
+			if (matchInfo[0].is(":checked"))
+				isForward = 1;
+			if (matchInfo[1].is(":checked"))
+				isForward = -1;
+			if (isForward == 0) {
+				alert("Please select a match orientation");
+				return;
+			}
+			chrom = matchInfo[2].val();
+			if (chrom != "X" && chrom.length != 2) {
+				alert("Invalid chromosome");
+				return;
+			}
+			queryNt = parseInt(matchInfo[3].val(),10);
+			subjectNt = parseInt(matchInfo[4].val(),10);
+			firstRowMatch = matchInfo[5].val();
+			if (pElemEndArr[0].is(":checked"))
+				endSeq = 5;
+			if (pElemEndArr[1].is(":checked"))
+				endSeq = 3;
+			if (endSeq == 0) {
+				alert("Which end was sequenced?");
+				return;
+			}
+
+			if (isForward > 0) {
+				var answer = subjectNt - queryNt + 9;
+				ilAnswerArr[0].val(chrom + ": " + answer.toLocaleString());
+				var pOrient = endSeq > 4 ? 3 : 5;
+				ilAnswerArr[1].val("" + pOrient + "' to " + (8 - pOrient) + "'");
+				ilAnswerArr[2].val(queryNt == 1 ? firstRowMatch.substring(0, 8) : "N/A");
+			}
+			else {
+				var answer = subjectNt + queryNt;
+				ilAnswerArr[0].val(chrom + ": " + answer.toLocaleString());
+				var pOrient = endSeq > 4 ? 5 : 3;
+				ilAnswerArr[1].val("" + pOrient + "' to " + (8 - pOrient) + "'");
+				ilAnswerArr[2].val(queryNt == 1 ? reverseComplement(firstRowMatch.substring(0, 8)) : "N/A");
+			}
+			ilAnswerArr[3].val(queryNt == 1 ? firstRowMatch.substring(0, 32) : "N/A");
+		});
+	});
+</script>
+<head>
+<title>P Element Insertion Finder</title>
+</head>
+<body>
+<h1 align="center">P Element Insertion Finder</h1>
+<div id="flybase-blast-div" class="flybase-blast-div" align="center" style="width:55vw;height:80vh;float:left;">
+	<iframe src="https://flybase.org/blast/" name="flybase_iframe" id="flybase_iframe" style="width:55vw;height:60vh;"></iframe>
+	<button id="flybase_reset_button">Reset Flybase</button><br><br>
+	Save Name: <input type="text" size="48" name="save_name_input" id="save_name_input"><br>
+	Job Id: <input type="text" size="64" id="job_id_input"><br>
+	<button id="flybase_save_button"> Save</button><br><br>
+</div>
+<div id="match-info-div" style="width:40vw;float:right;">
+	<h3>Match Info</h3>
+	<input type="radio" name="matchInfo" id="plus" value="1">+/+<br>
+	<input type="radio" name="matchInfo" id="minus" value="-1">+/-<br><br>
+	Chromosome: <input type="text" size="16" name="matchInfo" id="chrom"><br>
+	Query:      <input type="text" size="16" name="matchInfo" id="queryNt"><br>
+	Subject:    <input type="text" size="16" name="matchInfo" id="subjectNt"><br>
+	Paste first row of match (genomic data, not query) here: <input type="text" size="64" name="matchInfo" id="firstRowMatch"><br>
+</div>
+<div id="p-element-options-div" style="width:40vw;float:right;">
+	<h4>End Sequenced</h4>
+	<input type="radio" name="pElemEndArr" id="5primeSeq" value="5">5' end<br>
+	<input type="radio" name="pElemEndArr" id="3primeSeq" value="3">3' end<br><br>
+</div>
+<div id="il-submit-div" style="width:40vw;float:right;">
+	<button id="il_submit">Calculate Insertion Location</button>
+	<button id="il_reset">Reset Insertion Location</button>
+</div>
+<div id="il-answer-div" style="width:40vw;float:right;">
+<h3>Insertion Location</h3>
+Insertion location:     <input type="text" size="48" name="insertionLocation" id="insertionLocation" readonly><br>
+P Element Orientation:  <input type="text" size="48" name="insertionLocation" id="pOrientation" readonly><br>
+Duplicated Nucleotides: <input type="text" size="48" name="insertionLocation" id="duplNt" readonly><br>
+32 Nearby Nucleotides:  <input type="text" size="48" name="insertionLocation" id="nearNt" readonly><br>
+</div>
+</body>
+</html>
