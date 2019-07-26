@@ -1,7 +1,21 @@
 <!DOCTYPE html>
 <html>
+<head profile="http://www.w3.org/2005/10/profile">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="shortcut icon" href="stanex.png" type="image/x-icon" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script>
+	$('#txt').focus(function() {
+		alert(this.value);
+		if ( this.value == this.defaultValue ) {
+			this.value = '';
+		}
+	}).blur(function() {
+		alert(this.value);
+		if ( this.value == '' ) {
+			this.value = this.defaultValue;
+		}
+	});
 	function reverse(inp) {
 		return inp.split("").reverse().join("");
 	}
@@ -65,6 +79,11 @@
 				b.val("");
 			});
 		});
+
+		$("#cleanSeq").click(function(){
+			alert("Work in progress!\nI don't want to implement this until I'm ready to implement all types of digestion one could ever want or need, and it's getting late \n\n- Orion");
+		});
+
 		$("#il_submit").click(function(){
 			if (matchInfo[0].is(":checked"))
 				isForward = 1;
@@ -108,12 +127,15 @@
 			ilAnswerArr[3].val(queryNt == 1 ? firstRowMatch.substring(0, 32) : "N/A");
 		});
 	});
+
 </script>
 <head>
+
 <title>P Element Insertion Finder</title>
 </head>
 <body>
-<h1 align="center">P Element Insertion Finder</h1>
+
+<h1 align="left"><img src="stanex.png" align="bottom" style="max-width: 10%;max-height: 10%;padding-right: 7%;">P Element Insertion Finder</h1>
 <div id="flybase-blast-div" class="flybase-blast-div" align="center" style="width:55vw;height:80vh;float:left;">
 	<iframe src="https://flybase.org/blast/" name="flybase_iframe" id="flybase_iframe" style="width:55vw;height:60vh;"></iframe>
 	<button id="flybase_reset_button">Reset Flybase</button><br><br>
@@ -122,9 +144,14 @@
 	<button id="flybase_save_button"> Save</button><br><br>
 </div>
 <div id="match-info-div" style="width:40vw;float:right;">
+	<textarea name="message" id="seqRaw" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" rows="10" cols="30" autocomplete="off" style="width: 30%;height: 120px;font-size: 14px;font-style: italic;">INSERT RAW SEQ HERE</textarea>
+	<button type="button" id="cleanSeq" style="padding-top: 17.5%;"> >>  </button>
+	<textarea name="message" id="seqClean" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" rows="10" cols="30" autocomplete="off" style="width: 30%;height: 120px;font-size: 14px;font-style: italic;">CLEAN SEQ HERE</textarea>
 	<h3>Match Info</h3>
-	<input type="radio" name="matchInfo" id="plus" value="1">+/+<br>
-	<input type="radio" name="matchInfo" id="minus" value="-1">+/-<br><br>
+	<input type="radio" name="matchInfo" id="plus" value="1"><b style="font-size: 24px;">+/+
+	<input type="radio" name="matchInfo" id="minus" value="-1">+/-</b><br><br>
+
+
 	Chromosome: <input type="text" size="16" name="matchInfo" id="chrom"><br>
 	Query:      <input type="text" size="16" name="matchInfo" id="queryNt"><br>
 	Subject:    <input type="text" size="16" name="matchInfo" id="subjectNt"><br>
