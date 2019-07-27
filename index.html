@@ -80,7 +80,39 @@
 		});
 
 		$("#cleanSeq").click(function(){
-			alert("Work in progress!\nI don't want to implement this until I'm ready to implement all types of digestion one could ever want or need, and it's getting late \n\n- Orion");
+			var seqRaw = $('textarea#seqRaw').val();
+			var seqClean = seqRaw;
+			var digestInfo = [$("#GATC"),$("#CCGG"),$("#otherDigest")]
+			var digest = "GATC";
+			if(digestInfo[1].is(":checked")){
+				digest = "CCGG"
+			}
+			else if(digestInfo[2].is(":checked")){
+				digest = document.getElementsByName('otherDigest')[0].value;
+			}
+			// alert("DIGEST USED: "+ digest);
+
+			var pIndex = seqClean.search("TTTCATCATG");
+			if(pIndex === -1){
+				alert("The p-element end was not found!");
+			}
+			else{
+				seqClean = seqClean.substring(pIndex+10);
+			}
+
+			var digestIndex = seqClean.indexOf(digest);
+			if(digestIndex === -1){
+				alert("A " + digest + " digest site was not found!");
+			}
+			else {
+				seqClean = seqClean.substring(0, digestIndex + digest.length);
+			}
+			if(seqClean==="INSERT RAW SEQ HERE"){
+				seqClean="CLEAN SEQ HERE";
+			}
+			$("textarea#seqClean").val(seqClean);
+			// alert(seqRaw);
+			// alert("Work in progress!\nI don't want to implement this until I'm ready to implement all types of digestion one could ever want or need, and it's getting late \n\n- Orion");
 		});
 
 		$("#il_submit").click(function(){
@@ -143,9 +175,16 @@
 	<button id="flybase_save_button"> Save</button><br><br>
 </div>
 <div id="match-info-div" style="width:40vw;float:right;">
-	<textarea name="message" id="seqRaw" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" rows="10" cols="30" autocomplete="off" style="width: 30%;height: 120px;font-size: 14px;font-style: italic;">INSERT RAW SEQ HERE</textarea>
+	<textarea name="message" id="seqRaw" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" onclick="this.select()" rows="10" cols="30" autocomplete="off" style="width: 30%;height: 120px;font-size: 14px;font-style: italic;">INSERT RAW SEQ HERE</textarea>
 	<button type="button" id="cleanSeq" style="padding-top: 17.5%;"> >>  </button>
-	<textarea name="message" id="seqClean" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" rows="10" cols="30" autocomplete="off" style="width: 30%;height: 120px;font-size: 14px;font-style: italic;">CLEAN SEQ HERE</textarea>
+	<textarea name="message" id="seqClean" onfocus="if(this.value==this.defaultValue)this.value=''" onblur="if(this.value=='')this.value=this.defaultValue" onclick="this.select()" rows="10" cols="30" autocomplete="off" style="width: 30%;height: 120px;font-size: 14px;font-style: italic;">CLEAN SEQ HERE</textarea>
+	<br><h4 style="display: inline;">Restriction:</h4>
+	<span style="display: inline; font-size: 12px;">
+		<input type="radio" name="digest" id="GATC" value="4">Sau3AI - <b>GATC</b>
+		<input type="radio" name="digest" id="CCGG" value="-4">HpaII - <b>CCGG</b>
+		<input type="radio" name="digest" id="otherDigest" value="-40"> Other:  <input type="text" name="otherDigest">
+		<!--<input type="radio" name="digest" value="-40">Other <input type="text" name="otherDigest"/>​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​-->
+	</span><br><br>
 	<h3>Match Info</h3>
 	<input type="radio" name="matchInfo" id="plus" value="1"><b style="font-size: 24px;">+/+
 	<input type="radio" name="matchInfo" id="minus" value="-1">+/-</b><br><br>
@@ -157,8 +196,8 @@
 	Paste first row of match (genomic data, not query) here: <input type="text" size="64" name="matchInfo" id="firstRowMatch"><br>
 </div>
 <div id="p-element-options-div" style="width:40vw;float:right;">
-	<h4>End Sequenced</h4>
-	<input type="radio" name="pElemEndArr" id="5primeSeq" value="5">5' end<br>
+	<h4 style="line-height: 0;display: inline;">End Sequenced:</h4>
+	<input type="radio" name="pElemEndArr" id="5primeSeq" value="5" style="font: ;">5' end
 	<input type="radio" name="pElemEndArr" id="3primeSeq" value="3">3' end<br><br>
 </div>
 <div id="il-submit-div" style="width:40vw;float:right;">
