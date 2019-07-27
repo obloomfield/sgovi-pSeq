@@ -186,20 +186,23 @@
 		<!--<input type="radio" name="digest" value="-40">Other <input type="text" name="otherDigest"/>​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​-->
 	</span><br><br>
 	<h3>Match Info</h3>
-	<input type="radio" name="matchInfo" id="plus" value="1"><b style="font-size: 24px;">+/+
-	<input type="radio" name="matchInfo" id="minus" value="-1">+/-</b><br><br>
 
+	<input type="radio" name="matchInfo" id="plus" value="1"><b style="font-size: 24px;">+/+
+	<input type="radio" name="matchInfo" id="minus" value="-1">+/-</b><br>
+
+	<div id="p-element-options-div" style="width:40vw;float:right;font-size: 15px">
+		<h4 style="line-height: 0;display: inline; font-weight: normal;"><i>End Sequenced:</i></h4>
+		<input type="radio" name="pElemEndArr" id="5primeSeq" value="5" style="font: ;">5' end
+		<input type="radio" name="pElemEndArr" id="3primeSeq" value="3">3' end<br>
+	</div>
 
 	Chromosome: <input type="text" size="16" name="matchInfo" id="chrom"><br>
 	Query:      <input type="text" size="16" name="matchInfo" id="queryNt"><br>
 	Subject:    <input type="text" size="16" name="matchInfo" id="subjectNt"><br>
-	Paste first row of match (genomic data, not query) here: <input type="text" size="64" name="matchInfo" id="firstRowMatch"><br>
+	Paste first row of match (genomic data, not query) here: <input type="text" size="64" name="matchInfo" id="firstRowMatch"><br><br>
 </div>
-<div id="p-element-options-div" style="width:40vw;float:right;">
-	<h4 style="line-height: 0;display: inline;">End Sequenced:</h4>
-	<input type="radio" name="pElemEndArr" id="5primeSeq" value="5" style="font: ;">5' end
-	<input type="radio" name="pElemEndArr" id="3primeSeq" value="3">3' end<br><br>
-</div>
+
+
 <div id="il-submit-div" style="width:40vw;float:right;">
 	<button id="il_submit">Calculate Insertion Location</button>
 	<button id="il_reset">Reset Insertion Location</button>
