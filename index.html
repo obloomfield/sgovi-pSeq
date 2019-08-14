@@ -54,7 +54,7 @@
 
 		$("#flybase_save_button").click(function(){
 			var newButton = $("<button>" + $("#save_name_input").val() + "</button>");
-			newButton.val("http://flybase.org/blast/checkJobStatus.html?jobHash=" + $("#job_id_input").val());
+			newButton.val("https://flybase.org/blast/checkJobStatus.html?jobHash=" + $("#job_id_input").val());
 			newButton.click(function(){
 				$("#flybase_iframe").attr("src", $(this).val());
 			});
